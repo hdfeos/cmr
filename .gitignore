@@ -1,6 +1,5 @@
 *~
 build
-cmr.cfg
 *.pyc
 .idea
 .ipynb_checkpoints

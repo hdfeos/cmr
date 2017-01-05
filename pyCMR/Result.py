@@ -1,8 +1,8 @@
 import requests
 import shutil
 import urllib
-
-
+import sys, traceback
+import re
 class Result(dict):
     """
     The class to structure the response xml string from the cmr API
@@ -41,6 +41,19 @@ class Collection(Result):
 
         self._location = 'https://{}/search/concepts/{}.umm-json'.format(cmr_host, metaResult['concept-id'])
         self._downloadname = metaResult['Collection']['ShortName']
+        
+        # Retrieve OPeNDAPUrl
+        try:
+            urls = self['Collection']['OnlineAccessURLs']['OnlineAccessURL']
+            # print urls
+            self._OPeNDAPUrl = filter(lambda x: re.search("opendap", x['URL']), urls)[0]['URL']
+        except:
+            # traceback.print_exc(file=sys.stdout)
+            # print self
+            self._OPeNDAPUrl = None
+    def getOPeNDAPUrl(self):
+        return self._OPeNDAPUrl
+                                      
 
 class Granule(Result):
     def __init__(self, metaResult):
@@ -61,6 +74,7 @@ class Granule(Result):
             urls = self['Granule']['OnlineResources']['OnlineResource']
             self._OPeNDAPUrl = filter(lambda x: x["Type"] == "OPeNDAP", urls)[0]['URL']
         except :
+            # print self
             self._OPeNDAPUrl = None
 
     def getOPeNDAPUrl(self):
