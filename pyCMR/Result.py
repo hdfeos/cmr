@@ -50,9 +50,10 @@ class Granule(Result):
 
         # Retrieve downloadable url
         try:
-            self._location = self['Granule']['OnlineAccessURLs']['OnlineAccessURL'][0]['URL']
+            self._location = self['Granule']['OnlineAccessURLs']['OnlineAccessURL']['URL']
             self._downloadname = self._location.split("/")[-1]
         except KeyError:
+            # print self['Granule']['OnlineAccessURLs']['OnlineAccessURL']
             self._location = None
 
         # Retrieve OPeNDAPUrl
